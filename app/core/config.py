@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     CORS_ORIGINS: List[str] = ["http://localhost:3000"]
 
     LLM_API_KEY: str = os.getenv("LLM_API_KEY", "")
-    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "claude")
+    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "gemini")
     LLM_MODEL: str = os.getenv("LLM_MODEL", "claude-3-sonnet-20240229")
 
     class Config:
