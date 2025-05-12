@@ -6,6 +6,7 @@ click==8.2.0
 colorama==0.4.6
 distro==1.9.0
 dnspython==2.7.0
+pydantic-settings==2.0.3
 email_validator==2.2.0
 fastapi==0.115.12
 fastapi-cli==0.0.7
