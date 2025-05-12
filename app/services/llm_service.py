@@ -56,10 +56,7 @@ async def get_gemini_response(query: str) -> str:
     try:
         # Configure gemini
         client = genai.Client(api_key=settings.LLM_API_KEY)
-        # model = genai.GenerativeModel(
-        #     model = settings.LLM_MODEL or 'gemini-1.5-pro',
-        #     client=client
-        #     )
+    
 
         # System instructions
         system_instructions = (
