@@ -4,7 +4,7 @@ from app.services.llm_service import get_llm_response
 
 router = APIRouter()
 
-@router.post("query", response_model=QueryResponse)
+@router.post("/query", response_model=QueryResponse)
 async def process_query(request: QueryRequest):
     """
         Process a user query and return an LLM-generated response
