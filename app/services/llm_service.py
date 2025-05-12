@@ -3,7 +3,7 @@ import anthropic
 from app.core.config import settings
 # from google.generativeai import genai
 from google import genai
-from google.genai.types import GenerationConfig
+from google.genai.types import GenerationConfig, GenerateContentConfig
 
 async def get_llm_response(query: str) -> str:
     """
@@ -56,10 +56,10 @@ async def get_gemini_response(query: str) -> str:
     try:
         # Configure gemini
         client = genai.Client(api_key=settings.LLM_API_KEY)
-        model = genai.GenerativeModel(
-            model = settings.LLM_MODEL or 'gemini-1.5-pro',
-            client=client
-            )
+        # model = genai.GenerativeModel(
+        #     model = settings.LLM_MODEL or 'gemini-1.5-pro',
+        #     client=client
+        #     )
 
         # System instructions
         system_instructions = (
@@ -70,13 +70,12 @@ async def get_gemini_response(query: str) -> str:
             "Always clarify that you are providing general information and not legal advice."
         )
 
-        contents = [
-            {"role": "user", "parts": [f"System: {system_instructions}\n\nUser: {query}"]}
-        ]
+        prompt = f"System: {system_instructions}\n\nUser: {query}"
 
-        response = model.generate_content(
-            contents=contents,
-            generation_config=GenerationConfig(
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt,
+            config=GenerateContentConfig(
                 temperature=0.3,
                 max_output_tokens=1024,
                 top_p=0.8,
