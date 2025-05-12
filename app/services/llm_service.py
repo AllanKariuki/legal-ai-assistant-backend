@@ -1,6 +1,9 @@
 import os
 import anthropic
 from app.core.config import settings
+# from google.generativeai import genai
+from google import genai
+from google.genai.types import GenerationConfig
 
 async def get_llm_response(query: str) -> str:
     """
@@ -9,6 +12,8 @@ async def get_llm_response(query: str) -> str:
 
     if settings.LLM_PROVIDER == "claude":
         return await get_claude_response(query)
+    elif settings.LLM_PROVIDER == 'gemini':
+        return await get_gemini_response(query)
     else:
         raise NotImplementedError(f"LLM provider {settings.LLM_PROVIDER} not implemented")
     
@@ -40,4 +45,48 @@ async def get_claude_response(query: str) -> str:
     except Exception as e:
         # Log the error and return a generic error message
         print(f"Error getting claude response: {e}")
+        raise Exception("Failed to get response from LLM service")
+    
+
+async def get_gemini_response(query: str) -> str:
+    """
+        Get a response from Gemini API
+    """
+
+    try:
+        # Configure gemini
+        client = genai.Client(api_key=settings.LLM_API_KEY)
+        model = genai.GenerativeModel(
+            model = settings.LLM_MODEL or 'gemini-1.5-pro',
+            client=client
+            )
+
+        # System instructions
+        system_instructions = (
+            "You are a helpful legal assistant AI that provides information about legal "
+            "concepts, procedures, and documents in accordance with Kenya's laws.\n\n"
+            "Provide clear, concise, and accurate information. Format your response with markdown for readability.\n\n"
+            "Include relevant sections with headings when appropriate.\n\n"
+            "Always clarify that you are providing general information and not legal advice."
+        )
+
+        contents = [
+            {"role": "user", "parts": [f"System: {system_instructions}\n\nUser: {query}"]}
+        ]
+
+        response = model.generate_content(
+            contents=contents,
+            generation_config=GenerationConfig(
+                temperature=0.3,
+                max_output_tokens=1024,
+                top_p=0.8,
+                top_k=40,
+            )
+        )
+
+        return response.candidates[0].content.parts[0].text
+    
+    except Exception as e:
+        # Log the error and return a generic error message
+        print(f"Error getting gemini response: {e}")
         raise Exception("Failed to get response from LLM service")
