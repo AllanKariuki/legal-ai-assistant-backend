@@ -1,4 +1,4 @@
-# 🚀 Legal AI Project Setup Instructions
+# 🚀 Legal AI Assistant Project Setup Instructions
 
 ## 📦 Requirements
 
