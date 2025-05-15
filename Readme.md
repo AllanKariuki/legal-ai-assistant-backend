@@ -53,12 +53,12 @@ main:app refers to your FastAPI entry point (main.py, and the FastAPI app inside
 
 --reload enables hot-reloading during development.
 
-Open your browser at: http://127.0.0.1:8000
+Open your browser at: (http://127.0.0.1:8000)
 ```
 
 ### 6. 📚 API Docs
 FastAPI automatically generates documentation:
 
-- Swagger UI: http://127.0.0.1:8000/docs
+- Swagger UI: (http://127.0.0.1:8000/docs)
 
-- ReDoc: http://127.0.0.1:8000/redoc
+- ReDoc: (http://127.0.0.1:8000/redoc)
