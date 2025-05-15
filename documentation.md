@@ -25,6 +25,7 @@ Include relevant sections with headings when appropriate.
 Always clarify that you are providing general information and not legal advice.
 
 Question: {user_question}
+```
 
 ### 🧪 Example Input
 
@@ -53,4 +54,6 @@ Question: {user_question}
 
 
 ### 🔍 Usage Context
+```plaintext
 Used when users ask legal questions via the /query endpoint. The backend sends both the question and context to the LLM. The answer is returned and displayed in the frontend.
+```
