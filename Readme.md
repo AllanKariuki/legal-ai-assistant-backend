@@ -1,4 +1,4 @@
-# 🚀 FastAPI Project Setup Instructions
+# 🚀 Legal AI Project Setup Instructions
 
 ## 📦 Requirements
 
@@ -14,8 +14,8 @@
 ### 1. 📁 Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/AllanKariuki/legal-ai-assistant-backend.git
+cd legal-ai-assistant-backend
 ```
 
 ### 2. 🧪 Create and Activate a Virtual Environment
