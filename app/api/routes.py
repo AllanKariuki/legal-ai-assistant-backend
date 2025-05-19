@@ -90,7 +90,7 @@ async def handle_query(query: str, user_id: str, db: Session):
         # Store assistant message
         assistant_message = Message(
             conversation_id=conversation.id,
-            role="assistant",
+            role="ai",
             content=llm_response
         )
         db.add(assistant_message)
@@ -117,19 +117,19 @@ async def get_conversations(
     
     return conversations
 
-@router.get("/conversations", response_model=List[ConversationSchema])
-async def get_conversations(
-    user_id: Optional[str] = Cookie(None),
-    db: Session = Depends(get_db)
-):
-    if not user_id:
-        return []
+# @router.get("/conversations", response_model=List[ConversationSchema])
+# async def get_conversations(
+#     user_id: Optional[str] = Cookie(None),
+#     db: Session = Depends(get_db)
+# ):
+#     if not user_id:
+#         return []
     
-    conversations = db.query(Conversation).filter(
-        Conversation.user_id == user_id
-    ).order_by(Conversation.updated_at.desc()).all()
+#     conversations = db.query(Conversation).filter(
+#         Conversation.user_id == user_id
+#     ).order_by(Conversation.updated_at.desc()).all()
     
-    return conversations
+#     return conversations
 
 @router.get("/conversations/{conversation_id}", response_model=ConversationSchema)
 async def get_conversation(
