@@ -30,7 +30,7 @@ class Message(Base):
     
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     conversation_id = Column(String, ForeignKey("conversations.id"))
-    role = Column(String)  # "user" or "assistant"
+    role = Column(String)  # "user" or "ai"
     content = Column(Text)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     conversation = relationship("Conversation", back_populates="messages")
