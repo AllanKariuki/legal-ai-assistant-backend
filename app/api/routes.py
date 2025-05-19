@@ -47,7 +47,7 @@ async def process_query(
     if not user_id:
         user_id = str(uuid.uuid4())
         response_content = await handle_query(request.query, request.conversation_id, user_id, db)
-        # Set cookie in response
+        # Set cookie in response header
         response.set_cookie(key="user_id", value=user_id, httponly=True, max_age=31536000)  # 1 year
         response_content.cookie = {"user_id": user_id}
         return response_content
@@ -122,19 +122,6 @@ async def get_conversations(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# @router.get("/conversations", response_model=List[ConversationSchema])
-# async def get_conversations(
-#     user_id: Optional[str] = Cookie(None),
-#     db: Session = Depends(get_db)
-# ):
-#     if not user_id:
-#         return []
-    
-#     conversations = db.query(Conversation).filter(
-#         Conversation.user_id == user_id
-#     ).order_by(Conversation.updated_at.desc()).all()
-    
-#     return conversations
 
 @router.get("/conversations/{conversation_id}", response_model=ConversationSchema)
 async def get_conversation(
