@@ -112,12 +112,15 @@ async def get_conversations(
 ):
     if not user_id:
         return []
+    try:
+        
+        conversations = db.query(Conversation).filter(
+            Conversation.user_id == user_id
+        ).order_by(Conversation.updated_at.desc()).all()
     
-    conversations = db.query(Conversation).filter(
-        Conversation.user_id == user_id
-    ).order_by(Conversation.updated_at.desc()).all()
-    
-    return conversations
+        return conversations
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # @router.get("/conversations", response_model=List[ConversationSchema])
 # async def get_conversations(
