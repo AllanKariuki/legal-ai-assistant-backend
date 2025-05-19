@@ -18,7 +18,7 @@
 #     except Exception as e:
 #         raise HTTPException(status_code=500, detail=str(e))
     
-from fastapi import APIRouter, Depends, HTTPException, Request, Cookie
+from fastapi import APIRouter, Depends, Response, HTTPException, Request, Cookie
 from sqlalchemy.orm import Session
 from typing import Optional
 import uuid
@@ -34,7 +34,8 @@ router = APIRouter()
 
 @router.post("/query", response_model=QueryResponse)
 async def process_query(
-    request: QueryRequest, 
+    request: QueryRequest,
+    response: Response,
     db: Session = Depends(get_db),
     user_id: Optional[str] = Cookie(None)
 ):
@@ -45,14 +46,15 @@ async def process_query(
     # Generate or retrieve user ID
     if not user_id:
         user_id = str(uuid.uuid4())
-        response = await handle_query(request.query, user_id, db)
+        response_content = await handle_query(request.query, request.conversation_id, user_id, db)
         # Set cookie in response
         response.set_cookie(key="user_id", value=user_id, httponly=True, max_age=31536000)  # 1 year
-        return response
+        response_content.cookie = {"user_id": user_id}
+        return response_content
     else:
-        return await handle_query(request.query, user_id, db)
+        return await handle_query(request.query, request.conversation_id, user_id, db)
 
-async def handle_query(query: str, user_id: str, db: Session):
+async def handle_query(query: str, conversation_id: str, user_id: str, db: Session):
     try:
         # Check if user exists, create if not
         user = db.query(User).filter(User.id == user_id).first()
@@ -60,9 +62,9 @@ async def handle_query(query: str, user_id: str, db: Session):
             user = User(id=user_id)
             db.add(user)
             db.commit()
-        
+                    
         # Get or create conversation
-        conversation_id = query.get("conversation_id")
+        # conversation_id = query.get("conversation_id")
         if conversation_id:
             conversation = db.query(Conversation).filter(
                 Conversation.id == conversation_id,
