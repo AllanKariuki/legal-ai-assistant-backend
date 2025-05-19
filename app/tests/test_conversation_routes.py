@@ -1,6 +1,7 @@
 import pytest
 import uuid
 from datetime import datetime, timedelta
+from app.models.database import User, Conversation, Message
 
 def test_get_conversations_no_user_id(client, test_db):
     """Test getting conversations without a user_id cookie."""

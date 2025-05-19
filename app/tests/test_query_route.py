@@ -1,6 +1,7 @@
 import pytest
 import uuid
 from fastapi.testclient import TestClient
+from app.models.database import User, Conversation, Message
 
 def test_process_query_new_user(client, mock_llm_response, test_db):
     """Test processing a query from a new user without a user_id cookie."""
