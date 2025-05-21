@@ -5,6 +5,7 @@ from datetime import datetime
 class QueryRequest(BaseModel):
     query: str
     conversation_id: Optional[str] = None
+    conversation_title: Optional[str] = None
 
 class QueryResponse(BaseModel):
     response: str

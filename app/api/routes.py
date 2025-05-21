@@ -2,6 +2,7 @@
 from fastapi import APIRouter, Depends, Response, HTTPException, Cookie
 from sqlalchemy.orm import Session
 from typing import Optional
+from datetime import datetime
 import uuid
 
 from ..db.database import get_db
@@ -27,7 +28,7 @@ async def process_query(
     # Generate or retrieve user ID
     if not user_id:
         user_id = str(uuid.uuid4())
-        response_content = await handle_query(request.query, request.conversation_id, user_id, db)
+        response_content = await handle_query(request.query, request.conversation_id, request.conversation_title, user_id, db)
         # Set cookie in response header
         response.set_cookie(key="user_id", value=user_id, httponly=True, max_age=31536000)  # 1 year
         response_content.cookie = {"user_id": user_id}
@@ -35,7 +36,7 @@ async def process_query(
     else:
         return await handle_query(request.query, request.conversation_id, user_id, db)
 
-async def handle_query(query: str, conversation_id: str, user_id: str, db: Session):
+async def handle_query(query: str, conversation_id: str, conversation_title: str, user_id: str, db: Session):
     try:
         # Check if user exists, create if not
         user = db.query(User).filter(User.id == user_id).first()
@@ -51,10 +52,21 @@ async def handle_query(query: str, conversation_id: str, user_id: str, db: Sessi
                 Conversation.id == conversation_id,
                 Conversation.user_id == user_id
             ).first()
+
             if not conversation:
                 raise HTTPException(status_code=404, detail="Conversation not found")
+            
+            #Update the conversation with the conversation title if it exists
+            if conversation_title and conversation.title != conversation_title:
+                conversation.title = conversation_title
+                conversation.updated_at = datetime.utcnow()
+                db.commit()
+
         else:
-            conversation = Conversation(user_id=user_id)
+            conversation = Conversation(
+                user_id=user_id,
+                title=conversation_title,
+                )
             db.add(conversation)
             db.commit()
         
