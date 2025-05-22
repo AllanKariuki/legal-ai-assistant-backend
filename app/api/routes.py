@@ -1,5 +1,5 @@
   
-from fastapi import APIRouter, Depends, Response, HTTPException, Cookie
+from fastapi import APIRouter, Depends, Response, HTTPException, Cookie, Request
 from sqlalchemy.orm import Session
 from typing import Optional
 from datetime import datetime
@@ -34,7 +34,7 @@ async def process_query(
         response_content.cookie = {"user_id": user_id}
         return response_content
     else:
-        return await handle_query(request.query, request.conversation_id, user_id, db)
+        return await handle_query(request.query, request.conversation_id, request.conversation_title, user_id, db)
 
 async def handle_query(query: str, conversation_id: str, conversation_title: str, user_id: str, db: Session):
     try:
@@ -100,13 +100,13 @@ async def handle_query(query: str, conversation_id: str, conversation_title: str
 
 @router.get("/conversations", response_model=List[ConversationSchema])
 async def get_conversations(
+    request: Request,
     user_id: Optional[str] = Cookie(None),
     db: Session = Depends(get_db)
 ):
     if not user_id:
         return []
     try:
-        
         conversations = db.query(Conversation).filter(
             Conversation.user_id == user_id
         ).order_by(Conversation.updated_at.desc()).all()
