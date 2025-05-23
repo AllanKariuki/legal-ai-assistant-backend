@@ -45,8 +45,6 @@ async def handle_query(query: str, conversation_id: str, conversation_title: str
             db.add(user)
             db.commit()
                     
-        # Get or create conversation
-        # conversation_id = query.get("conversation_id")
         if conversation_id:
             conversation = db.query(Conversation).filter(
                 Conversation.id == conversation_id,
@@ -61,7 +59,6 @@ async def handle_query(query: str, conversation_id: str, conversation_title: str
                 conversation.title = conversation_title
                 conversation.updated_at = datetime.utcnow()
                 db.commit()
-
         else:
             conversation = Conversation(
                 user_id=user_id,
