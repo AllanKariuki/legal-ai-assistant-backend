@@ -30,7 +30,7 @@ async def process_query(
         user_id = str(uuid.uuid4())
         response_content = await handle_query(request.query, request.conversation_id, request.conversation_title, user_id, db)
         # Set cookie in response header
-        response.set_cookie(key="user_id", value=user_id, httponly=True, max_age=31536000)  # 1 year
+        response.set_cookie(key="user_id", value=user_id, httponly=True, secure=True, samesite=None, max_age=31536000)  # 1 year
         response_content.cookie = {"user_id": user_id}
         return response_content
     else:
