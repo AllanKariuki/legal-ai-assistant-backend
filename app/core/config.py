@@ -9,7 +9,7 @@ class Settings(BaseSettings):
 
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000", 
-        "https://legal-ai-assistant-frontend.vercel.app/"
+        "https://legal-ai-assistant-frontend.vercel.app"
     ]
 
     LLM_API_KEY: str = os.getenv("LLM_API_KEY", "")
