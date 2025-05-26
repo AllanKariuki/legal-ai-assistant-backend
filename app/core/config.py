@@ -7,7 +7,10 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Legal Assistant AI"
 
 
-    CORS_ORIGINS: List[str] = ["*"]
+    CORS_ORIGINS: List[str] = [
+        "http://localhost:3000", 
+        "https://legal-ai-assistant-frontend.vercel.app/"
+    ]
 
     LLM_API_KEY: str = os.getenv("LLM_API_KEY", "")
     LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "gemini")
