@@ -2,6 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router as api_router
 from app.core.config import settings
+from app.models.database import Base
+from app.db.database import engine
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Legal Assistant AI aPI",
